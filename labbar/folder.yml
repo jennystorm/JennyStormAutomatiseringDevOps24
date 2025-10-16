@@ -1,0 +1,10 @@
+---
+- name: Create a directory
+  hosts: all
+  connection: local
+  tasks:
+   - name: Create folder
+     ansible.builtin.file:
+      path: /tmp/jennysfolder
+      state: directory
+      mode: '0755'
