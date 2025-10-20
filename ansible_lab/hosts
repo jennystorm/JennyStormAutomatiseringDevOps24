@@ -8,5 +8,3 @@
     [web]
     192.168.122.189
 
-    [controller]
-    JennysBurk ansible_connection=local
