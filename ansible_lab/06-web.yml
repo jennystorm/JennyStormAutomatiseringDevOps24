@@ -1,22 +1,56 @@
 ---
-- name: Copy conf-file to webserver
+- name: Set up configurations for nginx
   hosts: web
   become: true
   tasks:
-    - name: Copy file with owner and permissions
+    - name: Copy conf-file with owner and permissions
       ansible.builtin.copy:
         src: files/https.conf
         dest: /etc/nginx/conf.d/https.conf
         owner: root
         group: root
         mode: "0644"
+      register: result
+
+    - name: Print the value of result
+      ansible.builtin.debug:
+        var: result
 
     - name: Ensure the nginx configuration is updated for example.internal
       ansible.builtin.copy:
         src: files/example.internal.conf
         dest: /etc/nginx/conf.d/example.internal.conf
+      register: result
+
+    - name: Print the value of result
+      ansible.builtin.debug:
+        var: result
+
+    - name: Create a directory with SELinux context if it does not exist
+      ansible.builtin.file:
+        path: /var/www/example.internal/html/
+        state: directory
+        mode: "0755"
+        owner: root
+        group: root
+        setype: httpd_sys_content_t
+
+    - name: Copy index-file
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/example.internal/html/
+        owner: root
+        group: root
+        mode: "0644"
+        setype: httpd_sys_content_t
+      register: result #Osäker på om denna behövs, påverkar restart den?
+
+    - name: Print the value of result
+      ansible.builtin.debug:
+        var: result
 
     - name: Restart service to read in config-file
       ansible.builtin.service:
         name: nginx
         state: restarted
+      when: result.changed is true

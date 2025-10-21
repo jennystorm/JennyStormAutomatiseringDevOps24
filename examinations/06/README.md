@@ -45,7 +45,7 @@ See if you now can resolve the name `example.internal`:
     $ ping -c 1 example.internal
     PING example.internal (192.168.121.10) 56(84) bytes of data.
     64 bytes from example.internal (192.168.121.10): icmp_seq=1 ttl=64 time=0.446 ms
-    
+
     --- example.internal ping statistics ---
     1 packets transmitted, 1 received, 0% packet loss, time 0ms
     rtt min/avg/max/mdev = 0.446/0.446/0.446/0.000 ms
@@ -166,6 +166,7 @@ See https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_conditional
 There are several ways to accomplish this, and there is no _best_ way to do this with what we've done so far.
 
 Is this a good way to handle these types of conditionals? What do you think?
+
 
 # BONUS QUESTION
 
