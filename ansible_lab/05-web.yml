@@ -1,0 +1,17 @@
+---
+- name: Copy conf-file to webserver
+  hosts: web
+  become: true
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: files/https.conf
+        dest: /etc/nginx/conf.d/https.conf
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Restart service to read in config-file
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
