@@ -1,0 +1,20 @@
+---
+- hosts: db
+  become: true
+
+  tasks:
+    - name: Create a new database with name webbappdb
+      community.mysql.mysql_db:
+        name: webbappdb
+        state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        config_file: ""
+
+    - name: Create a new user for database webbappdb
+      community.mysql.mysql_user:
+        name: webappuser
+        password: secretpassword
+        priv: "*.*:ALL"
+        state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        config_file: ""

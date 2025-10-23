@@ -1,0 +1,8 @@
+---
+- hosts: db
+  become: true
+  tasks:
+    - name: Ensure requirements for mysql are installed
+      ansible.builtin.package:
+        name: python3-PyMySQL
+        state: present
