@@ -1,6 +1,8 @@
 server {
-    listen 80;
-    listen 443 ssl;
+    listen {{ ansible_host }}:80;
+    listen 100.126.40.51:80;    #Min tailscaleanslutning för att kunna kolla sidan när jag sitter hemma
+    listen {{ ansible_host }}:443 ssl;
+    listen 100.126.40.51:443 ssl;
     root /var/www/example.internal/html;
     index index.html;
     server_name example.internal;

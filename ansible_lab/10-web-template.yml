@@ -1,0 +1,20 @@
+---
+- name: Set up dynamical configurations for nginx
+  hosts: web
+  become: true
+  tasks:
+
+    - name: Ensure the nginx configuration is updated for example.internal
+      ansible.builtin.template:
+        src: templates/example.internal.conf.j2
+        dest: /etc/nginx/conf.d/example.internal.conf
+        owner: root
+        group: root
+        mode: "0644"
+      register: result
+
+    - name: Restart service to read in config-file
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      when: result.changed is true

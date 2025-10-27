@@ -1,0 +1,20 @@
+web_users:
+  - user_name: alovelace
+    full_name: "Ada Lovelace"
+    groups:
+      - wheel
+      - audio
+      - video
+  - user_name: aturing
+    full_name: "Alan Turing"
+    groups:
+      - tape
+  - user_name: edijkstra
+    full_name: "Edsger Djikstra"
+    groups:
+      - tcpdump
+  - user_name: ghopper
+    full_name: "Grace Hopper"
+    groups:
+      - wheel
+      - audio

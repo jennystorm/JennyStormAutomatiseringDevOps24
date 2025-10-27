@@ -1,0 +1,17 @@
+---
+- name: Add users to webserver
+  hosts: web
+  become: true
+  vars_files:
+    - ./files/11-user-variables.yml
+    - ./files/11-user-passwords.yml
+
+  tasks:
+    - name: Add users from file in a loop
+      ansible.builtin.user:
+        name: "{{ item.user_name }}"
+        comment: "{{ item.full_name }}"
+        groups: "{{ item.groups }}"
+        password: "{{ user_passwords[item.user_name]}}"
+        state: present
+      loop: "{{ web_users }}"
