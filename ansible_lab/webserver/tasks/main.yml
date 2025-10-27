@@ -1,0 +1,106 @@
+---
+# tasks file for webserver
+
+# Installation av mjukvara
+- name: Ensure nginx is installed
+  ansible.builtin.package:
+    name: nginx
+    state: latest
+
+- name: Ensure we have necessary software installed
+  ansible.builtin.package:
+    name: python3-cryptography
+    state: present
+
+# Start och aktivering av tjänst
+- name: Ensure nginx is started at boot
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+
+- name: Start nginx right now
+  ansible.builtin.service:
+    name: nginx
+    state: started
+
+# Katalogstruktur för certifikat
+- name: Ensure the /etc/pki/nginx directory exists
+  ansible.builtin.file:
+    path: /etc/pki/nginx
+    state: directory
+    mode: "0755"
+    owner: root
+
+- name: Ensure we have a /etc/pkig/nginx/private directory
+  ansible.builtin.file:
+    path: /etc/pki/nginx/private
+    state: directory
+    mode: "0700"
+    owner: root
+
+# Skapa certifikat och nycklar
+- name: Ensure we have a private key for our certificate
+  community.crypto.openssl_privatekey:
+    path: /etc/pki/nginx/private/server.key
+
+- name: Create a self-signed certificate
+  community.crypto.x509_certificate:
+    path: /etc/pki/nginx/server.crt
+    privatekey_path: /etc/pki/nginx/private/server.key
+    provider: selfsigned
+
+# Nginx-konfiguration
+- name: Copy conf-file with owner and permissions
+  ansible.builtin.copy:
+    src: files/https.conf
+    dest: /etc/nginx/conf.d/https.conf
+    owner: root
+    group: root
+    mode: "0644"
+  register: result
+
+- name: Ensure the nginx configuration is updated for example.internal
+  ansible.builtin.template:
+    src: templates/example.internal.conf.j2
+    dest: /etc/nginx/conf.d/example.internal.conf
+    owner: root
+    group: root
+    mode: "0644"
+  register: result
+
+# Webbkatalog och filer
+- name: Create a directory with SELinux context if it does not exist
+  ansible.builtin.file:
+    path: /var/www/example.internal/html/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+    setype: httpd_sys_content_t
+
+- name: Copy index-file
+  ansible.builtin.copy:
+    src: files/index.html
+    dest: /var/www/example.internal/html/
+    owner: root
+    group: root
+    mode: "0644"
+    setype: httpd_sys_content_t
+  register: result
+
+# Starta om nginx vid konfigändring
+- name: Restart service
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+  when: result.changed is true
+
+# Användarhantering
+- name: Add users from file in a loop
+  ansible.builtin.user:
+    name: "{{ item.user_name }}"
+    comment: "{{ item.full_name }}"
+    groups: "{{ item.groups }}"
+    password: "{{ user_passwords[item.user_name]}}"
+    state: present
+  loop: "{{ web_users }}"

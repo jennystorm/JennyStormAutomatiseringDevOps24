@@ -1,6 +1,6 @@
 ---
 - name: Copy md-files to deploy
-  hosts: web
+  hosts: db
   become: true
 
   tasks:
