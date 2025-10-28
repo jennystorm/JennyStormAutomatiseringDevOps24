@@ -57,7 +57,8 @@
     owner: root
     group: root
     mode: "0644"
-  register: result
+  notify:
+    - Reload nginx
 
 - name: Ensure the nginx configuration is updated for example.internal
   ansible.builtin.template:
@@ -66,7 +67,8 @@
     owner: root
     group: root
     mode: "0644"
-  register: result
+  notify:
+    - Reload nginx
 
 # Webbkatalog och filer
 - name: Create a directory with SELinux context if it does not exist
@@ -86,14 +88,8 @@
     group: root
     mode: "0644"
     setype: httpd_sys_content_t
-  register: result
-
-# Starta om nginx vid konfigändring
-- name: Restart service
-  ansible.builtin.service:
-    name: nginx
-    state: restarted
-  when: result.changed is true
+  notify:
+    - Reload nginx
 
 # Användarhantering
 - name: Include vaulted user passwords

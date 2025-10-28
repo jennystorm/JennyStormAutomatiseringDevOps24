@@ -6,8 +6,7 @@ In order to minimize the amount of restarts and to enable a complex configuratio
 
 Read up on [Ansible handlers](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html)
 
-In the previous examination ([Examination 12](../12/)), we changed the structure of the project to two separate
-roles, `webserver` and `dbserver`.
+In the previous examination ([Examination 12](../12/)), we changed the structure of the project to two separate roles, `webserver` and `dbserver`.
 
 # QUESTION A
 
