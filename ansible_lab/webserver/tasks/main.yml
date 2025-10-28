@@ -96,6 +96,10 @@
   when: result.changed is true
 
 # Användarhantering
+- name: Include vaulted user passwords
+  ansible.builtin.include_vars:
+    file: 11-user-passwords.yml
+
 - name: Add users from file in a loop
   ansible.builtin.user:
     name: "{{ item.user_name }}"

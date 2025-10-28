@@ -1,10 +1,8 @@
 # Examination 12 - Roles
 
-So far we have been using separate playbooks and ran them whenever we wanted to make
-a specific change.
+So far we have been using separate playbooks and ran them whenever we wanted to make a specific change.
 
-With Ansible [roles](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html) we
-have the capability to organize tasks into sets, which are called roles.
+With Ansible [roles](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html) we have the capability to organize tasks into sets, which are called roles.
 
 These roles can then be used in a single playbook to perform the right tasks on each host.
 
