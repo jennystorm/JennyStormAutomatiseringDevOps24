@@ -1,0 +1,52 @@
+---
+- name: 1.2.1.1 Ensure GPG keys are configured
+  hosts: all
+  become: true
+  tasks:
+    - name: Find all repo files
+      # Använder find-modulen för att dynamiskt hitta alla filer med ändelsen .repo
+      ansible.builtin.find:
+        paths: /etc/yum.repos.d/
+        patterns: "*.repo"
+      register: repo_files
+
+    - name: Read repo file content
+      # Läser filerna binärt och returnerar innehållet Base64-kodat (för säker överföring)
+      ansible.builtin.slurp:
+        src: "{{ item.path }}"
+      loop: "{{ repo_files.files }}"
+      register: slurped_files
+
+    - name: Decode repo file content
+      # Dekodar Base64-innehållet till vanlig text så vi kan läsa och söka i det
+      # Skapar en ny lista "decoded_repo_files" med både filnamn och innehåll
+      ansible.builtin.set_fact:
+        decoded_repo_files: >-
+          {{
+            decoded_repo_files | default([]) +
+            [ { 'path': item.source, 'content': (item.content | b64decode) } ]
+          }}
+      loop: "{{ slurped_files.results }}"
+
+    - name: Assert that gpgkey is configured in each repo file
+      # Använder assert för att säkerställa att texten "gpgkey=" finns i varje fil
+      # Om raden saknas flaggas det som ett fel (CIS-avvikelse)
+      ansible.builtin.assert:
+        that:
+          - "'gpgkey=' in item.content"
+        success_msg: "GPG key is configured in {{ item.path }}"
+        fail_msg: "GPG key missing in {{ item.path }}"
+      loop: "{{ decoded_repo_files }}"
+
+    - name: List and controle installed GPG keys
+      ansible.builtin.find:
+        paths: /etc/pki/rpm-gpg/
+        patterns: "RPM-GPG-KEY*"
+      register: local_gpg_keys
+
+    - name: Query locally available GPG keys
+      ansible.builtin.assert:
+        that:
+          - local_gpg_keys.matched > 0
+        success_msg: "Lokala GPG-nycklar hittades i /etc/pki/rpm-gpg/"
+        fail_msg: "Inga GPG-nycklar hittades i /etc/pki/rpm-gpg/"
