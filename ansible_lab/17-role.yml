@@ -1,0 +1,6 @@
+---
+- name: Set password for sudo for all deploy-users
+  hosts: all
+  become: true
+  roles:
+    - 17-sudorule

@@ -1,0 +1,4 @@
+---
+# vars file for 17-sudorule
+
+deploy_password_hash: $6$ltbObyzGb/JUUzNj$0SWX0XEERWuIepixmYtQrp6HbG9S77heuu0IBa.oyDQCScHVfNGaK2KPoIb13X7dhwtjJvChiNfBdWr//3Had0

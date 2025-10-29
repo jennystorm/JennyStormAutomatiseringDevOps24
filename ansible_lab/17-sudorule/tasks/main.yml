@@ -1,0 +1,24 @@
+---
+# tasks file for 17-sudorule
+
+- name: Add password for deploy-user
+  ansible.builtin.user:
+    name: deploy
+    state: present
+    password_lock: false #Osäker på denna rad, det verkar fungera utmärkt utan -så det kanske inte behövs på AlmaLinux?
+    password: "{{ deploy_password_hash }}"
+
+- name: Make sure deploy user is in wheel group
+  ansible.builtin.user:
+    name: deploy
+    groups: wheel #Hade vi kört något annat än AlmaLinux hade vi kanske behövt villkora grupp (wheel/sudo) baserat på OS med hjälp av ansible_facts
+    append: yes #Lägger till istället för att ersätta
+
+- name: Remove passwordless sudo rule for deploy
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/deploy #Separat konfigurationsfil, inkluderad i sudoers (allt under sudoers.d)
+    regexp: '.*deploy.*NOPASSWD.*'
+    line: '%deploy ALL=(ALL) ALL'
+    validate: '/usr/sbin/visudo -cf %s' #Validerar att den temporära filen har korrekt syntax med hjälp av visudo, %s ersätts av Ansible med den sökvägen till den temporära filen
+    backup: yes #Sparar en backup av den gamla /etc/sudoers.d/deploy-filen i  /etc/sudoers.d/ ifall man vill återställa
+    create: yes
