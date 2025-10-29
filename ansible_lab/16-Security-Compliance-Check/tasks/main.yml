@@ -1,0 +1,8 @@
+---
+# tasks file for 16-Security-Compliance-Check
+
+- name: Ensure GPG keys are configured
+  import_tasks: 1-2-1-1-Ensure-GPG-keys-are-configured.yml
+
+- name: Configure Server Services (Not in use)
+  import_tasks: 2-1-Configure-Server-Services.yml

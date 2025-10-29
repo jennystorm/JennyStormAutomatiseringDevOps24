@@ -1,0 +1,106 @@
+---
+# defaults file for 16-Security-Compliance-Check
+# List of packages and services that should not be installed or active
+
+compliance_package_and_services:
+#2.1.1
+  - name: autofs
+    service: autofs.service
+#2.1.2
+  - name: avahi
+    service: avahi-daemon.service
+  - name: avahi
+    service: avahi-daemon.socket
+#2.1.3
+  - name: cockpit
+    service: cockpit.service
+  - name: cockpit
+    service: cockpit.socket
+#2.1.4
+  - name: kea
+    service: ""
+  - name: kea-dhcp4
+    service: kea-dhcp4.service
+  - name: kea-dhcp6
+    service: kea-dhcp6.service
+  - name: kea-dhcp-ddns
+    service: kea-dhcp-ddns.service
+#2.1.5
+  - name: bind
+    service: named.service
+#2.1.6
+  - name: dnsmasq
+    service: dnsmasq.service
+#2.1.7
+  - name: vsftpd
+    service: vsftpd.service
+#2.1.8
+  - name: dovecot
+    service: dovecot.service
+  - name: dovecot
+    service: dovecot.socket
+  - name: cyrus-imapd
+    service: cyrus-imapd.service
+#2.1.9
+  - name: nfs-utils
+    service: nfs-server.service
+#2.1.10
+  - name: cups
+    service: cups.service
+  - name: cups
+    service: cups.socket
+#2.1.11
+  - name: rpcbind
+    service: rpcbind.service
+  - name: rpcbind
+    service: rpcbind.socket
+#2.1.12
+  - name: rsync-daemon
+    service: rsyncd.service
+  - name: rsync-daemon
+    service: rsyncd.socket
+#2.1.13
+  - name: samba
+    service: smb.service
+#2.1.14
+  - name: net-snmp
+    service: snmpd.service
+#2.1.15
+  - name: telnet-server
+    service: telnet.socket
+#2.1.16
+  - name: tftp-server
+    service: tftp.service
+  - name: tftp-server
+    service: tftp.socket
+#2.1.17 (Kan utökas med andra proxyservrar)
+  - name: squid
+    service: squid.service
+  - name: tinyproxy
+    service: tinyproxy.service
+  - name: polipo
+    service: polipo.service
+#2.1.18 (Kan utökas med andra webserverpaket) Just i detta fall blir det lite lustigt att köra detta mot en webserver med nginx...
+  - name: httpd
+    service: httpd.service
+  - name: httpd
+    service: httpd.socket
+  - name: nginx
+    service: httpd.service
+#2.1.19 (Borde även kontrollera Server with GUI för att denna ska vara helt checkad.)
+  - name: gdm
+    service: gdm.service
+  - name: gnome-shell
+    service: ""
+  - name: xorg-x11-server-Xorg
+    service: ""
+  - name: gnome-session
+    service: ""
+#2.1.20 (Det kan eventuellt finnas andra relaterade paket som skulle behöva kontrolleras.)
+  - name: xorg-x11-server-Xwayland
+    service: ""
+#2.1.21 
+  # Den här punkten gäller inte paket/tjänster som ska tas bort utan som ska konfigureras så de är begränsade till lokal användning.
+  # Postfix, sendmail, exim. 
+#2.1.22
+  # Även den här punkten gäller inte paket/tjänster som ska tas bort utan att endast tjänster som är godkända och behövs lyssnar på nätverket.

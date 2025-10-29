@@ -1,0 +1,29 @@
+---
+- name: Gather installed packages facts
+  ansible.builtin.package_facts:
+    manager: auto #Ansible väljer automatiskt rätt pakethanterare beroende på system (apt, yum, dnf, etc)
+
+- name: Gather service facts
+  ansible.builtin.service_facts: #State = running/stopped, status = enabled/disaled
+
+# Kontrollera paket
+- name: Check that unwanted packages are not installed
+  ansible.builtin.assert:
+    success_msg: "{{ item.name }} package is not installed"
+    fail_msg: "{{ item.name }} package is installed"
+    that:
+      - item.name not in ansible_facts.packages #Jämför listan i /defaults med insamlad fakta från systemen
+  loop: "{{ compliance_package_and_services }}" #Loopar genom listan med alla paket/tjänster
+
+# Kontrollera tjänster
+- name: Check that unwanted services are not active or enabled
+  ansible.builtin.assert:
+    success_msg: "{{ item.service }} is not running or enabled"
+    fail_msg: "{{ item.service }} is running or enabled"
+    that:
+      - item.service not in ansible_facts.services 
+        or ansible_facts.services[item.service].state != 'running'
+        or ansible_facts.services[item.service].status != 'enabled'
+        #Om tjänsten inte finns är det okej, men om tjänsten har state running eller status enabled så aktiveras felmeddelandet
+  loop: "{{ compliance_package_and_services }}"
+  when: item.service != ""
