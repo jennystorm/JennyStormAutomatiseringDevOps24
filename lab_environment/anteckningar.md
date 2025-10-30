@@ -9,3 +9,5 @@
 ## curl -k https://192.168.121.64
 
 ## ❯ nc 192.168.121.145 3306 (fungerar inte)
+
+## vagrant snapshot restore default

@@ -35,7 +35,6 @@
         state: enabled
         permanent: true
         immediate: true
-        offline: true
 
     - name: Permanently enable https service, also enable it immediately if possible
       ansible.posix.firewalld:
@@ -43,7 +42,6 @@
         state: enabled
         permanent: true
         immediate: true
-        offline: true
 
 - name: Configure firewalld for dbserver
   hosts: db
@@ -56,4 +54,3 @@
         state: enabled
         permanent: true
         immediate: true
-        offline: true

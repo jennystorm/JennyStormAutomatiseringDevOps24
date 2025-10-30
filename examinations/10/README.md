@@ -12,11 +12,9 @@ but if the IP address of the machine changes, we have to do it again, and if the
 playbook is meant to be run against many different web servers, we have to be able
 to do this manually.
 
-Make a directory called `templates/` and put the `nginx` configuration file from Examination 6
-into that directory, and call it `example.internal.conf.j2`.
+Make a directory called `templates/` and put the `nginx` configuration file from Examination 6 into that directory, and call it `example.internal.conf.j2`.
 
-If you look at the `nginx` documentation, note that you don't have to enable any IPv6 interfaces
-on the web server. Stick to IPv4 for now.
+If you look at the `nginx` documentation, note that you don't have to enable any IPv6 interfaces on the web server. Stick to IPv4 for now.
 
 # QUESTION A
 
